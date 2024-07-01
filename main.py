@@ -1,4 +1,4 @@
-#####Data Exploration#######
+print("#####Data Exploration#######")
 
 import numpy as np
 import pandas as pd
@@ -46,7 +46,7 @@ df_cleaned = df.dropna()
 df_cleaned.info()
 #print(df_cleaned)
 
-#####Data Preprocessing#######
+print("#####Data Preprocessing#######")
 #Before running the linear regression, we need to change the columns to intergers/float.
 #print(df_cleaned.info()) 
 #Let's deal with Location first. How many unique locations are there?
@@ -86,7 +86,7 @@ cleaned_profile = ProfileReport(df_cleaned, title="Profiling Report2")
 # I get an error that some of my column names are dtype 'str_' which is creating problems for me. Let's look to see which columns are problematic:
 #print(df_cleaned.dtypes)
 
-######BUILDING REGRESSION MODEL######
+print("######BUILDING REGRESSION MODEL######")
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -128,7 +128,7 @@ compare_table["Difference"]=compare_table["Y_Test"]-compare_table["Y_Predict"]
 plt.hist(compare_table["Difference"])
 plt.show()
 
-#######Convert the model to binary classification problem:######
+print("#######Convert the model to binary classification problem:######")
 
 print(y.mean())
 df_cleaned.insert(len(df_cleaned.columns),"BelowAverage",0)
@@ -138,25 +138,25 @@ print(df_cleaned.BelowAverage)
 print(df_cleaned.AnnualSpending.values)
 print(len(df_cleaned.AnnualSpending.values))
 
-#######Classification Model Training and Evaluation#######
+print("#######Classification Model Training and Evaluation#######")
 
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 
-# Define features (X) and target (y)
-X = df_cleaned.drop(columns=['BelowAverage',"AnnualSpending"])
-y = df_cleaned['BelowAverage']
-
+# Expand X so also not include 'BelowAverage' column 
+df_cleaned['BelowAverage'] = df_cleaned['BelowAverage'].astype(str)
+#X = X.drop(columns=['BelowAverage'])
 
 # Split the data into training and testing sets (70% train, 30% test)
+#X.columns = X.columns.astype(str)
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # Initialize the Logistic Regression model
 model = LogisticRegression()
 
 # Train the model on the training data
-X.columns = X.columns.astype(str)
 model.fit(X_train, y_train)
 
 # Make predictions on the test data
