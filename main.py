@@ -97,16 +97,16 @@ y = df_cleaned['AnnualSpending']
 X= df_cleaned.drop(columns=['AnnualSpending'])
 X.columns = X.columns.astype(str)
 
-# # # Split the data into training and testing sets (70% train, 30% test)
+# # Split the data into training and testing sets (70% train, 30% test)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# # Initialize the linear regression model
+# Initialize the linear regression model
 model = LinearRegression()
 
-# # Train the model on the training data
+# Train the model on the training data
 model.fit(X_train, y_train)
 
-# # Make predictions on the test data
+# Make predictions on the test data
 y_pred = model.predict(X_test)
 
 # Evaluate the model
@@ -133,10 +133,11 @@ print("#######Convert the model to binary classification problem:######")
 print(y.mean())
 df_cleaned.insert(len(df_cleaned.columns),"BelowAverage",0)
 df_cleaned.loc[df_cleaned["AnnualSpending"]<y.mean(),"BelowAverage"]=1
-print(df_cleaned.columns)
-print(df_cleaned.BelowAverage)
-print(df_cleaned.AnnualSpending.values)
-print(len(df_cleaned.AnnualSpending.values))
+df_cleaned.drop(columns="AnnualSpending")
+#print(df_cleaned.columns)
+#print(df_cleaned.BelowAverage)
+#print(df_cleaned.AnnualSpending.values)
+#print(len(df_cleaned.AnnualSpending.values))
 
 print("#######Classification Model Training and Evaluation#######")
 
@@ -145,7 +146,10 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 
 
 # Expand X so also not include 'BelowAverage' column 
-df_cleaned['BelowAverage'] = df_cleaned['BelowAverage'].astype(str)
+df_cleaned['BelowAverage'] = df_cleaned['BelowAverage']
+X = df_cleaned.drop(columns=['BelowAverage'])
+X.columns = X.columns.astype(str)
+y = df_cleaned["BelowAverage"]
 #X = X.drop(columns=['BelowAverage'])
 
 # Split the data into training and testing sets (70% train, 30% test)
@@ -172,4 +176,5 @@ print("Accuracy:", accuracy)
 # Print classification report
 print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))
 
